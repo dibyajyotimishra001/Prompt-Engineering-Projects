@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Alpha Task Manager - A premium task management app to organize your daily goals.">
+    <title>Alpha To-Do-List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle sidebar">
+            <span></span><span></span><span></span>
+        </button>
+        <h1 class="navbar-title">Alpha To-Do-List</h1>
+        <div class="profile-trigger" id="profileTrigger">
+            <img src="" alt="Profile" class="navbar-avatar" id="navbarAvatar">
+            <div class="profile-dropdown" id="profileDropdown"></div>
+        </div>
+    </nav>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <img src="" alt="" class="sidebar-avatar" id="sidebarAvatar">
+            <div class="sidebar-user-info">
+                <span class="sidebar-username" id="sidebarUsername">Guest</span>
+                <span class="sidebar-status" id="sidebarStatus">Not logged in</span>
+            </div>
+        </div>
+        <div class="sidebar-divider"></div>
+        <nav class="sidebar-nav">
+            <a class="sidebar-item active" data-view="tasks">
+                <i class="bi bi-check2-square"></i><span>My Tasks</span>
+                <span class="sidebar-badge" id="taskBadge">0</span>
+            </a>
+            <a class="sidebar-item" data-view="history">
+                <i class="bi bi-clock-history"></i><span>History</span>
+            </a>
+            <a class="sidebar-item" data-view="profile">
+                <i class="bi bi-person-circle"></i><span>Profile</span>
+            </a>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-footer">
+            <i class="bi bi-stars"></i> Alpha Tasks v1.1
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TASKS VIEW -->
+        <section class="view active" id="tasksView">
+            <div class="view-header">
+                <h2><i class="bi bi-check2-square"></i> My Tasks</h2>
+                <span class="task-date" id="currentDate"></span>
+            </div>
+            <div class="task-input-wrapper">
+                <i class="bi bi-plus-circle task-input-icon"></i>
+                <input type="text" id="taskInput" placeholder="Add a new task..." autocomplete="off">
+                <button id="addBtn" aria-label="Add task"><i class="bi bi-arrow-up-circle-fill"></i></button>
+            </div>
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Done</button>
+            </div>
+            <ul class="task-list" id="taskList"></ul>
+            <div class="task-empty" id="taskEmpty">
+                <i class="bi bi-clipboard2-check"></i>
+                <p>No tasks yet. Add one above!</p>
+            </div>
+            <div class="task-footer" id="taskFooter">
+                <span id="taskCount">0 tasks remaining</span>
+                <button id="clearCompletedBtn" class="clear-btn"><i class="bi bi-trash3"></i> Clear Done</button>
+            </div>
+        </section>
+
+        <!-- HISTORY VIEW -->
+        <section class="view" id="historyView">
+            <div class="view-header">
+                <h2><i class="bi bi-clock-history"></i> Task History</h2>
+                <button class="clear-history-btn" id="clearHistoryBtn"><i class="bi bi-trash3"></i> Clear All</button>
+            </div>
+            <ul class="history-list" id="historyList"></ul>
+            <div class="history-empty" id="historyEmpty">
+                <i class="bi bi-hourglass"></i>
+                <p>No history yet.</p>
+            </div>
+        </section>
+
+        <!-- PROFILE VIEW -->
+        <section class="view" id="profileView">
+            <div class="view-header">
+                <h2><i class="bi bi-person-circle"></i> Profile</h2>
+            </div>
+            <div class="profile-card" id="profileCard">
+                <div class="profile-pic-wrapper">
+                    <img src="" alt="Profile" class="profile-pic-large" id="profilePicLarge">
+                    <button class="change-pic-overlay" id="changePicBtn"><i class="bi bi-camera-fill"></i><span>Change</span></button>
+                    <input type="file" id="profilePicInput" accept="image/*" hidden>
+                </div>
+                <h3 id="profileDisplayName">Guest</h3>
+                <p class="profile-handle" id="profileHandle">@guest</p>
+                <div class="profile-stats">
+                    <div class="stat-item"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total</span></div>
+                    <div class="stat-item"><span class="stat-value" id="statCompleted">0</span><span class="stat-label">Done</span></div>
+                    <div class="stat-item"><span class="stat-value" id="statPending">0</span><span class="stat-label">Pending</span></div>
+                </div>
+            </div>
+            <div class="profile-guest-prompt" id="profileGuestPrompt">
+                <i class="bi bi-person-lock"></i>
+                <p>Login to manage your profile</p>
+                <button class="prompt-btn" id="profileLoginBtn"><i class="bi bi-box-arrow-in-right"></i> Login Now</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-container">
+            <button class="modal-close" id="authModalClose"><i class="bi bi-x-lg"></i></button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label><i class="bi bi-person"></i> Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="bi bi-lock"></i> Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="loginPassword" placeholder="Enter password" required>
+                        <button type="button" class="toggle-pw" data-target="loginPassword"><i class="bi bi-eye"></i></button>
+                    </div>
+                </div>
+                <label class="remember-me" id="rememberMeLabel">
+                    <input type="checkbox" id="rememberMe">
+                    <span class="remember-check"><i class="bi bi-check-lg"></i></span>
+                    <span>Remember me</span>
+                </label>
+                <button type="submit" class="auth-submit"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            </form>
+            <form id="signupForm" class="auth-form hidden">
+                <div class="form-group">
+                    <label><i class="bi bi-person-badge"></i> Full Name</label>
+                    <input type="text" id="signupName" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="bi bi-at"></i> Username</label>
+                    <input type="text" id="signupUsername" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="bi bi-lock"></i> Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="signupPassword" placeholder="Create password (min 8 chars)" required>
+                        <button type="button" class="toggle-pw" data-target="signupPassword"><i class="bi bi-eye"></i></button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar-track">
+                            <div class="strength-bar-fill" id="strengthBarFill"></div>
+                        </div>
+                        <span class="strength-label" id="strengthLabel"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="bi bi-lock-fill"></i> Confirm Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="signupConfirm" placeholder="Confirm password" required>
+                        <button type="button" class="toggle-pw" data-target="signupConfirm"><i class="bi bi-eye"></i></button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-submit"><i class="bi bi-person-plus"></i> Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
