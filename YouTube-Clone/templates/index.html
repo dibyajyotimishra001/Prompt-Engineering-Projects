@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title|default('VidTube') }}{% endblock %}
+{% block content %}
+<div class="page-header" {% if page_title %}style="display:flex"{% endif %}>
+    <h1 class="page-title">{{ page_title|default('') }}</h1>
+</div>
+
+{% if videos|length == 0 %}
+<div class="empty-state">
+    <i class="bi bi-camera-video"></i>
+    <h2>No videos yet</h2>
+    <p>Be the first to upload a video!</p>
+    {% if user %}
+    <a href="/upload" class="btn-primary">Upload Video</a>
+    {% else %}
+    <a href="/login" class="btn-primary">Sign in to Upload</a>
+    {% endif %}
+</div>
+{% else %}
+<div class="video-grid" id="videoGrid">
+    {% for v in videos %}
+    <a href="/watch/{{ v.id }}" class="video-card" id="card-{{ v.id }}">
+        <div class="card-thumb">
+            {% if v.thumbnail %}
+            <img src="/api/thumbnail/{{ v.thumbnail }}" alt="{{ v.title }}" loading="lazy">
+            {% else %}
+            <div class="thumb-placeholder"><i class="bi bi-play-circle"></i></div>
+            {% endif %}
+            <span class="card-duration">{{ '%d:%02d'|format((v.get('duration',0)//60), (v.get('duration',0)%60)) if v.get('duration') else '0:00' }}</span>
+        </div>
+        <div class="card-info">
+            <div class="card-avatar">
+                {% if v.channel_avatar %}
+                <img src="/api/avatar/{{ v.channel_avatar }}" alt="">
+                {% else %}
+                <span class="mini-av">{{ v.channel_name[0]|upper }}</span>
+                {% endif %}
+            </div>
+            <div class="card-meta">
+                <h3 class="card-title">{{ v.title }}</h3>
+                <p class="card-channel">{{ v.channel_name }}</p>
+                <p class="card-stats">{{ fmt_views(v.views) }} views · {{ time_ago(v.uploaded_at) }}</p>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
